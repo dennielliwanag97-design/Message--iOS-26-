@@ -1,9 +1,6 @@
 import Foundation
 
-struct ChatMessage: Identifiable, Codable {
-    var id: UUID = UUID()
-    var senderId: String
-    var senderName: String
+struct ChatMessage: Id    var id: UUID = UUID(
     var text: String
     var imageURL: String?
     var createdAt: Date = Date()
