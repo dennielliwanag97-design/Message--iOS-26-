@@ -83,7 +83,7 @@ struct ChatListView: View {
     }
 }
 
-struct AvatarView: View {
+
     let initials: String
     let colorName: String
 
@@ -107,6 +107,3 @@ struct AvatarView: View {
             .green
         default:
             .blue
-        }
-    }
-}
