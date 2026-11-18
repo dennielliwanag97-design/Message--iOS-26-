@@ -1,38 +1,32 @@
 import Foundation
 
-struct ChatMessage: Identifiable, Hashable {
-    let id: UUID
-    let text: String
-    let date: Date
-    let isFromCurrentUser: Bool
-    var reaction: String?
+struct ChatMessage: Identifiable, Codable {
+    var id: UUID = UUID()
+    var senderId: String
+    var senderName: String
+    var text: String
+    var imageURL: String?
+    var createdAt: Date = Date()
+    var readBy: [String] = []
+    var reactions: [String: String] = [:]
 
-    init(id: UUID = UUID(), text: String, date: Date = .now,
-         isFromCurrentUser: Bool, reaction: String? = nil) {
+    init(
+        id: UUID = UUID(),
+        senderId: String,
+        senderName: String,
+        text: String,
+        imageURL: String? = nil,
+        createdAt: Date = Date(),
+        readBy: [String] = [],
+        reactions: [String: String] = [:]
+    ) {
         self.id = id
+        self.senderId = senderId
+        self.senderName = senderName
         self.text = text
-        self.date = date
-        self.isFromCurrentUser = isFromCurrentUser
-        self.reaction = reaction
-    }
-}
-
-struct Chat: Identifiable, Hashable {
-    let id: UUID
-    var name: String
-    var initials: String
-    var colorName: String
-    var messages: [ChatMessage]
-
-    var lastMessage: String { messages.last?.text ?? "No messages yet" }
-    var lastMessageDate: Date { messages.last?.date ?? .now }
-
-    init(id: UUID = UUID(), name: String, initials: String,
-         colorName: String = "blue", messages: [ChatMessage] = []) {
-        self.id = id
-        self.name = name
-        self.initials = initials
-        self.colorName = colorName
-        self.messages = messages
+        self.imageURL = imageURL
+        self.createdAt = createdAt
+        self.readBy = readBy
+        self.reactions = reactions
     }
 }
