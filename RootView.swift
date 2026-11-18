@@ -2,17 +2,19 @@ import SwiftUI
 import FirebaseAuth
 
 struct RootView: View {
-
     @State private var user: FirebaseAuth.User?
     @State private var isCheckingAuth = true
     @State private var authListener: AuthStateDidChangeListenerHandle?
 
+    @StateObject private var store = ChatStore()
+
     var body: some View {
         Group {
             if isCheckingAuth {
-                ProgressView("Loading...")
+                ProgressView("Loading Messenger...")
             } else if user != nil {
                 ChatListView()
+                    .environmentObject(store)
             } else {
                 LoginView()
             }
@@ -20,9 +22,8 @@ struct RootView: View {
         .onAppear {
             authListener = Auth.auth().addStateDidChangeListener {
                 _, currentUser in
-
-                self.user = currentUser
-                self.isCheckingAuth = false
+                user = currentUser
+                isCheckingAuth = false
             }
         }
         .onDisappear {
