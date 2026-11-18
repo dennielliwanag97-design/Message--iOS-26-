@@ -2,12 +2,19 @@ import SwiftUI
 
 struct ChatListView: View {
     @EnvironmentObject private var store: ChatStore
+
     @State private var searchText = ""
     @State private var showingNewChat = false
+    @State private var showingProfile = false
 
     private var filteredChats: [Chat] {
-        guard !searchText.isEmpty else { return store.chats }
-        return store.chats.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+        guard !searchText.isEmpty else {
+            return store.chats
+        }
+
+        return store.chats.filter {
+            $0.name.localizedCaseInsensitiveContains(searchText)
+        }
     }
 
     var body: some View {
@@ -18,15 +25,23 @@ struct ChatListView: View {
                         ChatView(chatID: chat.id)
                     } label: {
                         HStack(spacing: 13) {
-                            AvatarView(initials: chat.initials, colorName: chat.colorName)
+                            AvatarView(
+                                initials: chat.initials,
+                                colorName: chat.colorName
+                            )
+
                             VStack(alignment: .leading, spacing: 5) {
-                                Text(chat.name).font(.headline)
+                                Text(chat.name)
+                                    .font(.headline)
+
                                 Text(chat.lastMessage)
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                                     .lineLimit(1)
                             }
+
                             Spacer()
+
                             Text(chat.lastMessageDate, style: .time)
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
@@ -39,8 +54,18 @@ struct ChatListView: View {
             .searchable(text: $searchText, prompt: "Search")
             .navigationTitle("Messages")
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button { showingNewChat = true } label: {
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    Button {
+                        showingProfile = true
+                    } label: {
+                        Image(systemName: "person.crop.circle")
+                            .font(.title2)
+                    }
+                    .accessibilityLabel("Profile")
+
+                    Button {
+                        showingNewChat = true
+                    } label: {
                         Image(systemName: "square.and.pencil")
                             .font(.title3.weight(.semibold))
                     }
@@ -49,6 +74,9 @@ struct ChatListView: View {
             }
             .sheet(isPresented: $showingNewChat) {
                 NewChatView()
+            }
+            .sheet(isPresented: $showingProfile) {
+                ProfileView()
             }
         }
         .tint(.blue)
@@ -69,11 +97,16 @@ struct AvatarView: View {
 
     private var color: Color {
         switch colorName {
-        case "purple": .purple
-        case "orange": .orange
-        case "pink": .pink
-        case "green": .green
-        default: .blue
+        case "purple":
+            .purple
+        case "orange":
+            .orange
+        case "pink":
+            .pink
+        case "green":
+            .green
+        default:
+            .blue
         }
     }
 }
