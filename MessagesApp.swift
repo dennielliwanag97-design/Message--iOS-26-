@@ -1,14 +1,16 @@
 import SwiftUI
+import FirebaseCore
 
 @main
 struct MessagesApp: App {
-    @StateObject private var store = ChatStore()
+
+    init() {
+        FirebaseApp.configure()
+    }
 
     var body: some Scene {
         WindowGroup {
-            ChatListView()
-                .environmentObject(store)
-                .preferredColorScheme(.light)
+            RootView()
         }
     }
 }
