@@ -1,11 +1,22 @@
 import Foundation
 
-struct ChatMessage: Id    var id: UUID = UUID(
+struct ChatMessage: Identifiable, Codable {
+    var id: UUID = UUID()
+    var senderId: String
+    var senderName: String
     var text: String
     var imageURL: String?
     var createdAt: Date = Date()
     var readBy: [String] = []
     var reactions: [String: String] = [:]
+
+    var isFromCurrentUser: Bool {
+        senderId == "currentUser"
+    }
+
+    var date: Date {
+        createdAt
+    }
 
     init(
         id: UUID = UUID(),
