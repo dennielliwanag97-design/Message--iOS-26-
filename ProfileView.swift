@@ -1,5 +1,4 @@
-import SwiftUI
-import FirebaseAuth
+import FirebaseFirestore
 
 struct ProfileView: View {
     @State private var displayName = ""
@@ -36,13 +35,24 @@ struct ProfileView: View {
                         .background(Color.gray.opacity(0.12))
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
-                .padding(.horizontal)
+                .padding(.horizontal)  
 
-                Button("Save Profile") { }
-                    .buttonStyle(.borderedProminent)
+                Button("Save Profile") {
+    guard let user = Auth.auth().currentUser else { return }
+
+    let db = Firestore.firestore()
+
+    db.collection("users")
+        .document(user.uid)
+        .setData([
+            "displayName": displayName,
+            "email": user.email ?? ""
+        ], merge: true)
+}
+.buttonStyle(.borderedProminent)
 
                 Button(role: .destructive) {
-                    showLogoutAlert = true
+          a          showLogoutAlert = true
                 } label: {
                     Label("Log Out", systemImage: "rectangle.portrait.and.arrow.right")
                 }
